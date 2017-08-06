@@ -12219,7 +12219,8 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
 <p>I attempted to predict Milk. I thought that perhaps grocery would explain for Milk too, as they would most likely be bought together.</p>
-<p>The reported prediction score was 0.365. This implies to me that there is a light correlation between the other features, and the feature Milk. It is not strong, as it is quite far away from 1. I realize this makes sense, as an ice cream store for example, would only buy milk, and not buy any groceries. There would be no way to explain for those kind of stores.</p>
+<p>The reported prediction score was 0.365. This implies to me that there is a mild correlation between the other features, and the feature Milk. In a classification task, having a feature that can be predicted by other features is no too valuable, as it simply increases the dimensionality, without adding much information to the classification.</p>
+<p>I would think this feature is not very necessary for the classification</p>
 
 </div>
 </div>
@@ -12236,11 +12237,13 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Produce a scatter matrix for each pair of features in the data</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">scatter_matrix</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">diagonal</span> <span class="o">=</span> <span class="s1">&#39;kde&#39;</span><span class="p">);</span>
+
+<span class="k">print</span> <span class="n">data</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12257,6 +12260,29 @@ div#notebook {
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/Users/stopachka/anaconda/lib/python2.7/site-packages/ipykernel_launcher.py:2: FutureWarning: pandas.scatter_matrix is deprecated. Use pandas.plotting.scatter_matrix instead
   
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                     Fresh      Milk   Grocery    Frozen  Detergents_Paper  \
+Fresh             1.000000  0.100510 -0.011854  0.345881         -0.101953   
+Milk              0.100510  1.000000  0.728335  0.123994          0.661816   
+Grocery          -0.011854  0.728335  1.000000 -0.040193          0.924641   
+Frozen            0.345881  0.123994 -0.040193  1.000000         -0.131525   
+Detergents_Paper -0.101953  0.661816  0.924641 -0.131525          1.000000   
+Delicatessen      0.244690  0.406368  0.205497  0.390947          0.069291   
+
+                  Delicatessen  
+Fresh                 0.244690  
+Milk                  0.406368  
+Grocery               0.205497  
+Frozen                0.390947  
+Detergents_Paper      0.069291  
+Delicatessen          1.000000  
 </pre>
 </div>
 </div>
@@ -14063,7 +14089,9 @@ DMMwDMMwjCny/wF2eAYjCf/r7QAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Detergents_paper and Grocery exhibit a reasonably high degree of correlations (almost linear). Detergents_paper and Milk, alongside Milk and Grocery also have a bit of a lighter correlation. This slightly confirms my suspicions, that milk and grocery are correlated. However, It seems indeed that they are more lightly correlated. I did not suspect that detergents_paper and grocery would be so well correlated.</p>
+<p>Detergents_paper and Grocery exhibit a very high degree of correlation -- 0.925. Detergents_paper and Milk, alongside Milk and Grocery also have a high correlation (0.662, 0.728 respectively).</p>
+<p>This confirms my suspicion about the fact the Milk is not relevant for our classification. It surprised me that Detergents_paper and grocery had such a high correlation, which meant that we can remove one of them as well.</p>
+<p>Looking at the density plot on the diagnols, I see that the data is not normally distributed. Once we do feature scaling, this should look much more like a normal distribution</p>
 
 </div>
 </div>
@@ -14095,7 +14123,7 @@ DMMwDMMwjCny/wF2eAYjCf/r7QAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Scale the data using the natural logarithm</span>
@@ -18211,7 +18239,7 @@ MBgMBsOmwDg/BoPBYDAYDAaDYVNgnB+DwWAwGAwGg8GwKfi/tBsM3KOlZsQAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Display the log-transformed sample data</span>
@@ -18317,7 +18345,7 @@ Once you have performed this implementation, the dataset will be stored in the v
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># For each feature find the data points with extreme high or low values</span>
@@ -19129,7 +19157,7 @@ Once you have performed this implementation, the dataset will be stored in the v
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span> 
@@ -19487,10 +19515,10 @@ gg==
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong>
 The first two explain 0.71 of the variance in the data. The first four eplain 0.93 of the variance in the data</p>
-<p>The first dimension explains Fresh and Frozen about equally well. However, in this dimensions, there is a significant negative correlation on detergents_paper, a bit less strong of a negative correlation on milk and grocery.</p>
-<p>The second dimension does not seem to explain much of the variance. There is a strong negative correlation on fresh, and a pretty strong negative correlation on frozen and delicatessen.</p>
-<p>The third dimension strongly represents delicatessen, and less strongly represents frozen. There is an equally storng negative correlation on fresh.</p>
-<p>The fourth significantly comprises frozen. there is a bit of detegerents paper, a medium negative representation of delciatessen, and a bit of a negative representation of fresh.</p>
+<p>The first dimension gives high negative weights to Detergents_Paper, Grocery, and Milk. Because of relatively high weight of Detergents_paper, This makes me think that this PC could separate the "other grocery store cluster" well.</p>
+<p>The second dimension assigns high negative weights to Fresh, Frozen, Delicatessen. Because of the high weights on Fresh, and delicatessen, this makes me think this PC could separate out the "restaurant" cluster.</p>
+<p>The third dimension gives high positive weights to Delicatessen, with a lighter positive weight on Frozen, and a high negative weight to Fresh with a lighter negative weight on Detergents_paper. This makes me think perhaps this PC could either be separating out more deeply the restaurants that serve delicatessen, with restaurants that serve fresh products.</p>
+<p>The fourth significantly has a very high positive weight on frozen, and reasonably high negative weight on delicatessen. This makes me think this is further dividing the samples from dimension three (both frozen and delicatessen were positive) -- maybe this is the difference between very expensive restaurants, and more ready-to-made restaurants / small grocery store</p>
 
 </div>
 </div>
@@ -19610,7 +19638,7 @@ The first two explain 0.71 of the variance in the data. The first four eplain 0.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Apply PCA by fitting the good data with only two dimensions</span>
@@ -19643,7 +19671,7 @@ The first two explain 0.71 of the variance in the data. The first four eplain 0.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Display sample log-data after applying PCA transformation in two dimensions</span>
@@ -19725,7 +19753,7 @@ The first two explain 0.71 of the variance in the data. The first four eplain 0.
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Create a biplot</span>
@@ -19741,12 +19769,12 @@ The first two explain 0.71 of the variance in the data. The first four eplain 0.
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[15]:</div>
+<div class="prompt output_prompt">Out[18]:</div>
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x11c0ada10&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x11407c590&gt;</pre>
 </div>
 
 </div>
@@ -21856,8 +21884,12 @@ Sample point 2 predicted to be in Cluster 1
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>It seems to me that the restaurant cluster (segment 1) would take this change much more positively then the grocery store cluster (segment 2).  Restaurants may need their food delivered more immediately, to make sure things are fresh.</p>
+<p>It seems to me that the restaurant cluster (segment 1) would take this change much more positively then the grocery store cluster (segment 0).  Restaurants may need their food delivered more immediately, to make sure things are fresh.</p>
 <p>Other grocery stores, given the price is the same, would of course also appreciate faster delivery times, given that the price does not increase. They are much less invested in this, as they can afford to buy in bulk and hold for longer.</p>
+<p>If the company wanted to run an A/B Test to see how this affects customers, we can these segments as a way to partition the tests, one for the restaurants, and one for other grocery stores.</p>
+<p>The first A/B test would test the effect of this change on the restaurant cluster. We would take about 20% of the users in segment 1, and treat them as the test group. 80% will be the control group. In this, we can figure out how restaurants react to this change.</p>
+<p>We can run one more A/B test, which would test the effect of this change on the retailer cluster. We could similarily take 20% of the users in segment 0 as the test group, and 80% as the control.</p>
+<p>This way, we can measure spending on the testing groups vs the control groups, and find out how each cluster reacts to the change. We would then enable it only for the clusters that react positively.</p>
 
 </div>
 </div>
@@ -22582,19 +22614,6 @@ dxQIiYiIiIhI3VEgJCIiIiIidUeBkIiIiIiI1J3/BzHJkvzXeqFNAAAAAElFTkSuQmCC
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
     </div>
   </div>
